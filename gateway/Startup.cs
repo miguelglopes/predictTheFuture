@@ -24,7 +24,6 @@ namespace gateway
         {
 
             app.UseRouting();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

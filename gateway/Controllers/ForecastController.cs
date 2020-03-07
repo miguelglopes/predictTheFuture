@@ -13,9 +13,9 @@ namespace gateway.Controllers
     public class ForecastController : OSControllerBase{
         
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        private ActionResult<string> Forecast(){
+        //[ProducesResponseType(StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<string> Forecast(){
             return "forecasted";
         }
 

@@ -13,9 +13,9 @@ namespace gateway.Controllers
     public class FitModelController : OSControllerBase{
         
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        private ActionResult<string> FitModel(){
+        //[ProducesResponseType(StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<string> FitModel(){
             return "fitted model";
         }
 
