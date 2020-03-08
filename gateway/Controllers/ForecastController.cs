@@ -16,6 +16,7 @@ namespace gateway.Controllers
         //[ProducesResponseType(StatusCodes.Status201Created)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<string> Forecast(){
+            r.publishMessage("forecasted model", "request.forecast"); //TODO meter em config
             return "forecasted";
         }
 

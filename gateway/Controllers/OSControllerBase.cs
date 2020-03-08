@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using common.Messaging;
 
 namespace gateway.Controllers
 {
@@ -10,5 +11,6 @@ namespace gateway.Controllers
     [ApiController]
     public class OSControllerBase : ControllerBase
     {
+        protected Rabbit r = new Rabbit();
     }
 }

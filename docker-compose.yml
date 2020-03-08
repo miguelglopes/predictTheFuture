@@ -2,7 +2,8 @@ version: '3'
 
 services:
     rabbit:
-        image: "rabbitmq:3-management"
+        build:
+            context: ./rabbit
         hostname: "rabbit"
         environment:
             RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
@@ -18,7 +19,8 @@ services:
     gateway:
         build:
             context: ./gateway
-            dockerfile: ./DockerFile
+        environment: 
+            ASPNETCORE_URLS: http://+:5000
         ports:
             - "5000:5000"
 
