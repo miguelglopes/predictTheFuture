@@ -46,12 +46,16 @@ class Producer(Messenger):
         self._connection = pika.BlockingConnection(parameters=pika.URLParameters(self._amqpUrl))
         self._channel = self._connection.channel()
      
-    def publish(self, message, properties=None):
+    def publish(self, message, properties):
         if self._channel is None:
             self._connect()
-        self._channel.basic_publish(self.exchange, self.routingKey, message, properties)
+        props = pika.spec.BasicProperties()
+        props.headers = properties.headers
+        self._channel.basic_publish(self.exchange, self.routingKey, message, props)
 
-    def publishError(self, message, properties=None):
+    def publishError(self, message, properties):
         if self._channel is None:
             self._connect()
-        self._channel.basic_publish(self.exchange, self.routingKey, message, properties)
+        props = pika.spec.BasicProperties()
+        props.headers = properties.headers
+        self._channel.basic_publish(self.exchange, self.routingKey, "error", props)

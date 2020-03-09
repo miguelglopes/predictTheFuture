@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.Net.Mime;
+using gateway.Model;
+using System.Threading.Tasks;
+using System;
+
 
 namespace gateway.Controllers
 {
@@ -9,16 +13,21 @@ namespace gateway.Controllers
     /// </summary>
     [ApiController] //  isto é inherited?
     [Route("api/forecast")]
-    [Produces(MediaTypeNames.Application.Json)]
     public class ForecastController : OSControllerBase{
-        
+
         [HttpPost]
-        //[ProducesResponseType(StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<string> Forecast(){
-            r.publishMessage("forecasted model", "request.forecast"); //TODO meter em config
-            return "forecasted";
+        //[Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[Produces(MediaTypeNames.Application.Json)]
+
+        public async Task<IActionResult> ForecastModel([FromBody] ForecastRequest request)
+        {
+            string messageId = Guid.NewGuid().ToString("N");
+            r.publishMessage(request.serialize(), RK_REQUESTFORECAST, messageId); //TODO meter em config
+            return Accepted(messageId);
         }
+
 
     }
 }

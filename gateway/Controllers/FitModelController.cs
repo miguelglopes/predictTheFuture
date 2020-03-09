@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Mime;
 using gateway.Model;
 using System.Threading.Tasks;
+using System;
 
 namespace gateway.Controllers
 {
@@ -15,18 +16,16 @@ namespace gateway.Controllers
 
         [HttpPost]
         //[Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         //[Produces(MediaTypeNames.Application.Json)]
 
-        public async Task<FitRequest> FitModel([FromBody] FitRequest request){
-            if (request.id == 0)
-            {
-                long i = 0;
-                while (i <= 9999999999) { i = i + 1; }
-            }
-            r.publishMessage(request.serialize(), "request.fit"); //TODO meter em config
-            return request;
+        public async Task<IActionResult> FitModel([FromBody] FitRequest request){
+            if(request.data==null)
+                return BadRequest("data field not present");
+            string messageId = Guid.NewGuid().ToString("N");
+            r.publishMessage(request.serialize(), RK_REQUESTFIT, messageId); //TODO meter em config
+            return Accepted(messageId);
         }
 
     }

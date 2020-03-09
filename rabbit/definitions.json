@@ -11,13 +11,13 @@
     ],
     "vhosts": [
         {
-            "name": "/"
+            "name": "app"
         }
     ],
     "permissions": [
         {
             "user": "rabbitmq",
-            "vhost": "/",
+            "vhost": "app",
             "configure": ".*",
             "write": ".*",
             "read": ".*"
@@ -35,7 +35,7 @@
     "queues": [
         {
             "name": "requestFitQueue",
-            "vhost": "/",
+            "vhost": "app",
             "durable": true,
             "auto_delete": false,
             "arguments": {
@@ -44,7 +44,7 @@
         },
         {
             "name": "requestForecastQueue",
-            "vhost": "/",
+            "vhost": "app",
             "durable": true,
             "auto_delete": false,
             "arguments": {
@@ -53,7 +53,7 @@
         },
         {
             "name": "modelsQueue",
-            "vhost": "/",
+            "vhost": "app",
             "durable": true,
             "auto_delete": false,
             "arguments": {
@@ -62,7 +62,7 @@
         },
         {
             "name": "forecastsQueue",
-            "vhost": "/",
+            "vhost": "app",
             "durable": true,
             "auto_delete": false,
             "arguments": {
@@ -73,7 +73,7 @@
     "exchanges": [
         {
             "name": "predictFuture",
-            "vhost": "/",
+            "vhost": "app",
             "type": "topic",
             "durable": true,
             "auto_delete": false,
@@ -84,7 +84,7 @@
     "bindings": [
         {
             "source": "predictFuture",
-            "vhost": "/",
+            "vhost": "app",
             "destination": "requestFitQueue",
             "destination_type": "queue",
             "routing_key": "request.fit",
@@ -92,7 +92,7 @@
         },
         {
             "source": "predictFuture",
-            "vhost": "/",
+            "vhost": "app",
             "destination": "requestForecastQueue",
             "destination_type": "queue",
             "routing_key": "request.forecast",
@@ -100,7 +100,7 @@
         },        
         {
             "source": "predictFuture",
-            "vhost": "/",
+            "vhost": "app",
             "destination": "modelsQueue",
             "destination_type": "queue",
             "routing_key": "response.fit",
@@ -108,7 +108,7 @@
         },
         {
             "source": "predictFuture",
-            "vhost": "/",
+            "vhost": "app",
             "destination": "forecastsQueue",
             "destination_type": "queue",
             "routing_key": "response.forecast",

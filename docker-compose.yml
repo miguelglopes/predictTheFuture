@@ -4,24 +4,38 @@ services:
     rabbit:
         build:
             context: ./rabbit
+        networks:
+            - backend
+            - frontend
+        env_file:
+            - variables.env
         hostname: "rabbit"
-        environment:
-            RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
-            RABBITMQ_DEFAULT_USER: "rabbitmq"
-            RABBITMQ_DEFAULT_PASS: "rabbitmq"
-            RABBITMQ_DEFAULT_VHOST: "/"
         ports:
             - "15672:15672"
             - "5672:5672"
         labels:
-            name: "rabbitmq"
+            name: "rabbit"
 
     gateway:
         build:
             context: ./gateway
-        environment: 
-            ASPNETCORE_URLS: http://+:5000
+        networks:
+            - frontend
+        env_file:
+            - variables.env
         ports:
             - "5000:5000"
-
     
+    python_service:
+        build:
+            context: ./pythonService
+        networks:
+            - backend
+        env_file:
+            - variables.env
+
+networks:
+    backend:
+        driver: bridge
+    frontend:
+        driver: bridge
