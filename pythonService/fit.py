@@ -1,12 +1,17 @@
-from GeneralService import GeneralService
-import arimaModel
+#TODO DOCUMENTATION
+
+from GeneralService import GeneralService #local
+import arimaModel #local
+import LogMessages #local
+import exceptions #local
 import json
 import pickle
 import time
-import LogMessages
+import os
 
-responseRK="response.fit"
-requestQueue="requestQueueFit"#TODO FROM ENV VARS
+responseRK=os.environ['RABBITMQ_RK_RESPONSEFIT']
+requestQueue=os.environ['RABBITMQ_QUEUE_REQUESTFIT']
+
 
 class FitService(GeneralService):
 
@@ -17,9 +22,9 @@ class FitService(GeneralService):
 
         LogMessages.receivedMessage(basic_deliver.routing_key, properties)
 
-        #check for invalid requests. These should not be aknowledge. They are not requed        
+        #check for invalid requests. These should not be aknowledge since they are not our responsability. They are not requed.        
         try:
-            X = json.loads(body)["data"] #TODO FROM ENV VARS?
+            X = json.loads(body)["data"]
             assert(properties)
             assert(properties.message_id)
         except:
@@ -27,14 +32,31 @@ class FitService(GeneralService):
             return
 
         try:
+            response = dict()
+
+            #lock model while creating new one
             lock = self.redis.lockLatestModel()
-            model=arimaModel.fit_model(X)
-            serializedModel = pickle.dumps(model)
-            self.redis.setLatestModel(serializedModel)
-            self.redis.unlockLatestModel(lock) #TODO what to do if lock already expired?
-            self.rabbit.publish(responseRK, serializedModel, properties, basic_deliver, ack=True)
-        except:
-            self.rabbit.publishError(responseRK, "unexpected error", properties, basic_deliver, ack=True) #TODO IMPROVE ERROR PUBLISH
+
+            #create model
+            try:
+                model=arimaModel.fit_model(X)
+                serializedModel = pickle.dumps(model)
+                response["model"] = serializedModel
+            except:
+                raise exceptions.ModelFitError()
+
+            #TODO order on these? this should be one single transaction on the database
+            self.redis.unlockLatestModel(lock) #raises LockExpiredError
+            self.redis.setLatestModel(serializedModel) #raises UnableToSaveModel
+
+            self.rabbit.publishSuccess(responseRK, response, properties, basic_deliver, ack=True)
+
+        except exceptions.LockExpiredError as e1:
+            self.rabbit.publishFail(responseRK, e1.message, properties, basic_deliver, ack=True)
+        except exceptions.LockExpiredError as e2:
+            self.rabbit.publishFail(responseRK, e2.message, properties, basic_deliver, ack=True)
+        except Exception as e3:
+            self.rabbit.publishFail(responseRK, e3.message, properties, basic_deliver, ack=True)
 
 
 def main():

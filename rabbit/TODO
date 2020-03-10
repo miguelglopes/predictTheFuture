@@ -1,3 +1,5 @@
 TODO
 dead letter
 message acknoledgement time out?
+
+Potential problems: the lock is easily preverted by a user, either on purpose or unknownlinglu. Add password?

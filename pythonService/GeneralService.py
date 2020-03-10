@@ -1,7 +1,7 @@
 #TODO DOCUMENTATION
 
-from common.mig_rabbit import MigRabbit
-from common.mig_redis import MigRedis
+from mig_rabbit import MigRabbit
+from mig_redis import MigRedis
 import time
 from abc import ABC, abstractmethod
 
@@ -9,6 +9,7 @@ class GeneralService(ABC):
 
     def __init__(self, requestQueue, responseRK):
 
+        #TODO 10s is it enough? Too much?
         time.sleep(10)# Delays to make sure rabbit and redis is up
 
         self.requestQueue=requestQueue

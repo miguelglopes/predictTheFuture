@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+
     rabbit:
         build:
             context: ./rabbit
@@ -9,40 +10,61 @@ services:
             - frontend
         env_file:
             - variables.env
-        hostname: "rabbit"
+        hostname: rabbit
         ports:
-            - "15672:15672"
-            - "5672:5672"
-        labels:
-            name: "rabbit"
-
-    gateway:
-        build:
-            context: ./gateway
-        networks:
-            - frontend
-        env_file:
-            - variables.env
-        ports:
-            - "5000:5000"
-    
-    python_service:
-        build:
-            context: ./pythonService
-        networks:
-            - backend
-        env_file:
-            - variables.env
+            - 15672:15672
+            - 5672:5672
 
     redis:
         build:
             context: ./redis
+        hostname: redis
         networks:
             - backend
         ports:
-            - "6379:6379"
+            - 6379:6379
         env_file:
             - variables.env
+
+    # gateway:
+    #     build:
+    #         context: ./gateway
+    #     networks:
+    #         - frontend
+    #     ports:
+    #         - "5000:5000"
+    #     env_file:
+    #         - variables.env
+    #     depends_on:
+    #         - rabbit
+    
+    fit:
+        build:
+            context: ./pythonService
+            dockerfile: DockerfileFit
+        networks:
+            - backend
+        env_file:
+            - variables.env
+        depends_on:
+            - rabbit
+            - redis
+        deploy:
+            replicas: 6
+
+    forecast:
+        build:
+            context: ./pythonService
+            dockerfile: DockerfileForecast
+        networks:
+            - backend
+        env_file:
+            - variables.env
+        depends_on:
+            - rabbit
+            - redis
+        deploy:
+            replicas: 3
 
 networks:
     backend:

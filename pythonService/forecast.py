@@ -1,14 +1,16 @@
 #TODO DOCUMENTATION
 
-from GeneralService import GeneralService
-import arimaModel
+from GeneralService import GeneralService #local
+import arimaModel #local
+import exceptions #local
+import LogMessages #local
 import json
 import pickle
 import time
-import LogMessages
+import os
 
-responseRK="response.forecast" 
-requestQueue="requestQueueForecast" #TODO FROM ENV VARS
+responseRK=os.environ['RABBITMQ_RK_RESPONSEFORECAST']
+requestQueue=os.environ['RABBITMQ_QUEUE_REQUESTFORECAST']
 
 class ForecastService(GeneralService):
 
@@ -19,9 +21,9 @@ class ForecastService(GeneralService):
         
         LogMessages.receivedMessage(basic_deliver.routing_key, properties)
 
-        #check for invalid requests. These should not be aknowledge. They are not requed        
+        #check for invalid requests. These should not be aknowledge since they are not our responsability. They are not requed.        
         try:
-            numSteps = json.loads(body)["num_steps"] #TODO FROM ENV VARS?
+            numSteps = json.loads(body)["num_steps"]
             assert(properties)
             assert(properties.message_id)
         except:
@@ -29,15 +31,35 @@ class ForecastService(GeneralService):
             return
 
         try:
-            while self.redis.isLatestModelLocked():
-                time.sleep(2) #sleep 5s
 
-            model = pickle.loads(self.redis.getLatestModel())
-            forecast=arimaModel.forecast(None, model, numSteps)
-            serializedForecast = json.dumps(forecast.tolist())
-            self.rabbit.publish(responseRK, serializedForecast, properties, basic_deliver, ack=True)
-        except:
-            self.rabbit.publishError(responseRK, "unexpected error", properties, basic_deliver, ack=True) #TODO IMPROVE ERROR PUBLISH
+            response = dict()
+
+            #check lock and wait
+            while self.redis.isLatestModelLocked():
+                time.sleep(2) #TODO lock timeout? I should add one in case of lock catastrophic failure
+
+            #get latest model
+            latestModel = self.redis.getLatestModel() # raises ModelNotFoundError
+            model = pickle.loads(latestModel)
+
+            #forecast
+            try:
+                forecast=arimaModel.forecast(None, model, numSteps)
+                response["forecast"]=forecast.tolist()
+            except:
+                raise exceptions.ModelForecastError()
+            
+            #publish success
+            self.rabbit.publishSuccess(responseRK, response, properties, basic_deliver, ack=True)
+
+        except exceptions.ModelNotFoundError as e1:
+            self.rabbit.publishFail(responseRK, e1.message, properties, basic_deliver, ack=True)
+        except exceptions.ModelForecastError as e2:
+            self.rabbit.publishFail(responseRK, e2.message, properties, basic_deliver, ack=True)
+        except Exception as e3:
+            self.rabbit.publishFail(responseRK, e3.message, properties, basic_deliver, ack=True)
+
+
 
 def main():
     ForecastService().run()

@@ -3,7 +3,7 @@
 import logging
 import json
 
-#TODO AQUI
+#TODO AQUI LOGS MELHORAR
 logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
