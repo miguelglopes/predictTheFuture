@@ -34,7 +34,7 @@
     "policies": [],
     "queues": [
         {
-            "name": "requestFitQueue",
+            "name": "requestQueueFit",
             "vhost": "app",
             "durable": true,
             "auto_delete": false,
@@ -43,7 +43,7 @@
             }
         },
         {
-            "name": "requestForecastQueue",
+            "name": "requestQueueForecast",
             "vhost": "app",
             "durable": true,
             "auto_delete": false,
@@ -85,7 +85,7 @@
         {
             "source": "predictFuture",
             "vhost": "app",
-            "destination": "requestFitQueue",
+            "destination": "requestQueueFit",
             "destination_type": "queue",
             "routing_key": "request.fit",
             "arguments": {}
@@ -93,11 +93,11 @@
         {
             "source": "predictFuture",
             "vhost": "app",
-            "destination": "requestForecastQueue",
+            "destination": "requestQueueForecast",
             "destination_type": "queue",
             "routing_key": "request.forecast",
             "arguments": {}
-        },        
+        },    
         {
             "source": "predictFuture",
             "vhost": "app",

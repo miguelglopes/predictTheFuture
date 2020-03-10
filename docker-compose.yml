@@ -34,6 +34,16 @@ services:
         env_file:
             - variables.env
 
+    redis:
+        build:
+            context: ./redis
+        networks:
+            - backend
+        ports:
+            - "6379:6379"
+        env_file:
+            - variables.env
+
 networks:
     backend:
         driver: bridge

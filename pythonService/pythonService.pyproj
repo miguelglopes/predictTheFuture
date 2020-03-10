@@ -24,6 +24,7 @@
     <Compile Include="arimaModel.py" />
     <Compile Include="common\rabbit.py" />
     <Compile Include="app.py" />
+    <Compile Include="common\redis.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="common\" />

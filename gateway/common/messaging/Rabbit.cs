@@ -31,8 +31,7 @@ namespace common.Messaging
         public void publishMessage(string message, string routingKey, string messageId)
         {
             IBasicProperties props = this.channel.CreateBasicProperties();
-            props.Headers = new Dictionary<string, object>();
-            props.Headers.Add("messageId", messageId);
+            props.MessageId = messageId;
             byte[] body = Encoding.UTF8.GetBytes(message);
             this.channel.BasicPublish(exchange: EXCHANGE_NAME, routingKey: routingKey, basicProperties: props, body: body);
         }
