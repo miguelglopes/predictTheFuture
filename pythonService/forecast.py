@@ -36,7 +36,7 @@ class ForecastService(GeneralService):
 
             #check lock and wait
             while self.redis.isLatestModelLocked():
-                time.sleep(2) #TODO lock timeout? I should add one in case of lock catastrophic failure
+                time.sleep(2) #TODO Add timeout? I should add one in case of lock catastrophic failure
 
             #get latest model
             latestModel = self.redis.getLatestModel() # raises ModelNotFoundError

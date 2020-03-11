@@ -1,5 +1,7 @@
 ﻿
-namespace gateway.Model
+using Newtonsoft.Json;
+
+namespace Gateway.Model
 {
     public class FitRequest : RequestBase
     {

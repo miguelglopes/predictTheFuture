@@ -45,7 +45,7 @@ class FitService(GeneralService):
             except:
                 raise exceptions.ModelFitError()
 
-            #TODO order on these? this should be one single transaction on the database
+            #TODO order on these? this should be one single transaction on the database. Use pipe with Redis?
             self.redis.unlockLatestModel(lock) #raises LockExpiredError
             self.redis.setLatestModel(serializedModel) #raises UnableToSaveModel
 

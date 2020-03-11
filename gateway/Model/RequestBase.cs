@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace gateway.Model
+namespace Gateway.Model
 {
-    public abstract class RequestBase
+    public class RequestBase
     {
         public string serialize()
         {
