@@ -1,0 +1,28 @@
+improvements: add rabbit connection error recover, since it's the frontend. In the backend its ok cause we'll just launch more microservices
+se o gateway for abaixo perdemos o concurrent dictionary e todas as respostas aos pedidos sao perdidas, mesmo que tenham sido enviadas e terminadas com sucesso. Para ultrapassar isto, poder-se-ia persisitir no redis, por exemplo.
+something bad happened that shouldn't have happened ("error") or the server is working fine but your data isn't quite up to standards ("fail").
+
+add webserver to docker
+Potential problems: the lock is easily preverted by a user, either on purpose or unknownlinglu. Add password?
+
+Iknow redis could be used as a messaging system, but im not very confortable with it
+
+swagger
+jsend
+
+lost connection to rabbit not taken into account
+
+0. commit
+1. fazer docker image
+2. fazer bateria de testes
+2.5. testar minimamente
+3. relatorio
+
+TODO
+dead letter done
+
+available http pages rabbit, sagger, redis???
+
+if environment variables dont exist gives error
+
+docker json file should obtain values from environment variables

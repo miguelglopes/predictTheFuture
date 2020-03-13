@@ -1,12 +1,15 @@
 ﻿
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gateway.Model
 {
+
     public class FitRequest : RequestBase
     {
-        public double[] data { get; set; }
-
+        [Required]
+        [JsonProperty(PropertyName = "data")]
+        public double[] Data { get; set; }
 
     }
 }

@@ -5,19 +5,18 @@ import LogMessages
 import os
 import jsend
 
-#TODO exceptions StreamLostError
-
 _amqpUrl=os.environ['RABBITMQ_URL']
 _exchange=os.environ['RABBITMQ_EXCHANGE']
 
 
-class MigRabbit():
+class MRabbit():
 
     def __init__(self, queue):
         self._queue=queue
         self._parameters=pika.URLParameters(_amqpUrl)
         self._connection = pika.BlockingConnection(self._parameters)
         self._channel = self._connection.channel()
+        LogMessages.info("Successfully connected to RabbitMQ.")
 
     def _publish(self, routingKey, data, properties, basic_deliver, type, ack=True):
 
@@ -42,7 +41,7 @@ class MigRabbit():
 
     def publishSuccess(self, routingKey, message, properties, basic_deliver, ack=True):
         self._publish(routingKey, message, properties, basic_deliver, jsend.successStr, ack)
-        LogMessages.processedSuccessfully(basic_deliver.routing_key, properties)
+        LogMessages.publishResponse(basic_deliver.routing_key, properties)
 
     def publishFail(self, routingKey, errorMessage, properties, basic_deliver, ack=True):
         self._publish(routingKey, errorMessage, properties, basic_deliver, jsend.failStr, ack)
@@ -50,7 +49,7 @@ class MigRabbit():
 
     def consume(self, callbackFunction):
         self._channel.basic_consume(queue=self._queue, auto_ack=False, on_message_callback=callbackFunction)
-        LogMessages.debug("Consuming messages on queue {}".format(self._queue))
+        LogMessages.info("Consuming messages on queue {}".format(self._queue))
         self._channel.start_consuming()
 
     def nackMessage(self, basic_deliver, properties):

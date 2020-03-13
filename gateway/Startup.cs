@@ -1,57 +1,91 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RabbitMQ.Client;
 using Gateway.Messaging;
+using Microsoft.OpenApi.Models;
+using System;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace Gateway
 {
     public class Startup
     {
+
+        string _title;
+        string _version;
+        public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
+
+
+
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             Environment = env;
+
+            _title = Configuration.GetSection("ASPNETCORE_TITLE").Value;
+            _version = Configuration.GetSection("ASPNETCORE_VERSION").Value;
+
         }
 
-        public IConfiguration Configuration { get; }
-        public IWebHostEnvironment Environment { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+
+
+
+        // This method gets called by the runtime. Add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
 
-            ConnectionFactory factory = new ConnectionFactory();
-            factory.Uri = new Uri(this.Configuration["rabbit"]);
-            //factory.DispatchConsumersAsync = true;
+            //add jsend error responses
+            //TODO - future implementation
 
-            MessagesRepository messageRepository = new MessagesRepository();
-            RabbitConnection rabbitConnection = new RabbitConnection(factory);
+            //add configuration
+            services.AddSingleton(Configuration);
 
+
+            //add endpoint controllers
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                });
+
+            //add needed singletons for consumers
+            MessageRepository messageRepository = new MessageRepository();
+            services.AddSingleton<MRabbitMQ>();
             services.AddSingleton(messageRepository);
-            // services.AddSingleton(factory);
-            services.AddSingleton(rabbitConnection);
 
-            services.AddHostedService<RabbitSubscriber>();
+            //add consumers
+            //TODO add more consumers if too much load
+            services.AddHostedService<FitConsumer>();
+            services.AddHostedService<ForecastConsumer>();
+
+            //Add swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc(_title, new OpenApiInfo { Title = _title, Version = _version });
+            });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // This method gets called by the runtime. Configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
 
-            //app.UseHttpsRedirection();
+            // Enable Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/" + _version + "/swagger.json", _title);
+                c.RoutePrefix = string.Empty;
+            });
 
+            //add routes
             app.UseRouting();
 
-            //app.UseAuthorization();
-
+            //add endpoints
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

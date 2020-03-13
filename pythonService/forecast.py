@@ -36,7 +36,7 @@ class ForecastService(GeneralService):
 
             #check lock and wait
             while self.redis.isLatestModelLocked():
-                time.sleep(2) #TODO Add timeout? I should add one in case of lock catastrophic failure
+                time.sleep(2)
 
             #get latest model
             latestModel = self.redis.getLatestModel() # raises ModelNotFoundError
@@ -52,12 +52,10 @@ class ForecastService(GeneralService):
             #publish success
             self.rabbit.publishSuccess(responseRK, response, properties, basic_deliver, ack=True)
 
-        except exceptions.ModelNotFoundError as e1:
-            self.rabbit.publishFail(responseRK, e1.message, properties, basic_deliver, ack=True)
-        except exceptions.ModelForecastError as e2:
-            self.rabbit.publishFail(responseRK, e2.message, properties, basic_deliver, ack=True)
-        except Exception as e3:
-            self.rabbit.publishFail(responseRK, e3.message, properties, basic_deliver, ack=True)
+        except exceptions.ModelNotFoundError as e:
+            self.rabbit.publishFail(responseRK, e.message, properties, basic_deliver, ack=True)
+        except exceptions.ModelForecastError as e:
+            self.rabbit.publishFail(responseRK, e.message, properties, basic_deliver, ack=True)
 
 
 

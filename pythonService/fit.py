@@ -41,7 +41,7 @@ class FitService(GeneralService):
             try:
                 model=arimaModel.fit_model(X)
                 serializedModel = pickle.dumps(model)
-                response["model"] = serializedModel
+                response["message"] = "Successfully fitted and persisted model."
             except:
                 raise exceptions.ModelFitError()
 
@@ -51,12 +51,12 @@ class FitService(GeneralService):
 
             self.rabbit.publishSuccess(responseRK, response, properties, basic_deliver, ack=True)
 
-        except exceptions.LockExpiredError as e1:
-            self.rabbit.publishFail(responseRK, e1.message, properties, basic_deliver, ack=True)
-        except exceptions.LockExpiredError as e2:
-            self.rabbit.publishFail(responseRK, e2.message, properties, basic_deliver, ack=True)
-        except Exception as e3:
-            self.rabbit.publishFail(responseRK, e3.message, properties, basic_deliver, ack=True)
+        except exceptions.LockExpiredError as e:
+            self.rabbit.publishFail(responseRK, e.message, properties, basic_deliver, ack=True)
+        except exceptions.ModelFitError as e:
+            self.rabbit.publishFail(responseRK, e.message, properties, basic_deliver, ack=True)
+        except exceptions.UnableToSaveModel as e:
+            self.rabbit.publishFail(responseRK, e.message, properties, basic_deliver, ack=True)
 
 
 def main():

@@ -1,4 +1,4 @@
-#my implementation of jsend, adapted from github
+#implementation of jsend - https://github.com/omniti-labs/jsend
 
 import json
 

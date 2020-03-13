@@ -1,20 +1,23 @@
 #TODO DOCUMENTATION
-#TODO LOGGING!
 
 import exceptions #local
 import redis
 import time
 import os
+import LogMessages
 
 _lockModel='lockLatestModel'
 _model='latestModel'
 _host=os.environ["REDIS_HOST"]
 _port=os.environ["REDIS_PORT"]
+_timeout=os.environ["REDIS_LOCK_TIMEOUT"]
 
-class MigRedis(redis.Redis):
+
+class MRedis(redis.Redis):
 
     def __init__(self):
         super().__init__(host=_host, port=_port, db=0)
+        LogMessages.info("Successfully connected to Redis.")
 
     def getLatestModel(self):
         model = self.get(_model)
@@ -28,8 +31,7 @@ class MigRedis(redis.Redis):
         except:
             raise exceptions.UnableToSaveModel()
 
-    #TODO is timeout enough? Too much?
-    def lockLatestModel(self, timeout=10):
+    def lockLatestModel(self, timeout=_timeout):
         endLock = float(time.time() + timeout)
         self.set(_lockModel, endLock)
         return endLock

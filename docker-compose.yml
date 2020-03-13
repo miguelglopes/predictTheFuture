@@ -26,17 +26,17 @@ services:
         env_file:
             - variables.env
 
-    # gateway:
-    #     build:
-    #         context: ./gateway
-    #     networks:
-    #         - frontend
-    #     ports:
-    #         - "5000:5000"
-    #     env_file:
-    #         - variables.env
-    #     depends_on:
-    #         - rabbit
+    gateway:
+        build:
+            context: ./gateway
+        networks:
+            - frontend
+        ports:
+            - 5000:5000
+        env_file:
+            - variables.env
+        depends_on:
+            - rabbit
     
     fit:
         build:

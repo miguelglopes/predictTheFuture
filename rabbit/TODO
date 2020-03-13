@@ -1,9 +1,0 @@
-TODO
-dead letter
-message acknoledgement time out?
-
-Potential problems: the lock is easily preverted by a user, either on purpose or unknownlinglu. Add password?
-
-Iknow redis could be used as a messaging system, but im not very confortable with it
-
-swagger

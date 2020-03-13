@@ -34,12 +34,13 @@
     "policies": [],
     "queues": [
         {
-            "name": "requestQueueFit",
+            "name": "modelsQueue",
             "vhost": "app",
             "durable": true,
             "auto_delete": false,
             "arguments": {
-                "x-queue-type": "classic"
+                "x-queue-type": "classic",
+                "x-dead-letter-exchange": "deadLetter"
             }
         },
         {
@@ -48,20 +49,32 @@
             "durable": true,
             "auto_delete": false,
             "arguments": {
-                "x-queue-type": "classic"
+                "x-queue-type": "classic",
+                "x-dead-letter-exchange": "deadLetter"
             }
         },
         {
-            "name": "modelsQueue",
+            "name": "requestQueueFit",
             "vhost": "app",
             "durable": true,
             "auto_delete": false,
             "arguments": {
-                "x-queue-type": "classic"
+                "x-queue-type": "classic",
+                "x-dead-letter-exchange": "deadLetter"
             }
         },
         {
             "name": "forecastsQueue",
+            "vhost": "app",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-queue-type": "classic",
+                "x-dead-letter-exchange": "deadLetter"
+            }
+        },
+        {
+            "name": "deadLetterQueue",
             "vhost": "app",
             "durable": true,
             "auto_delete": false,
@@ -75,6 +88,15 @@
             "name": "predictFuture",
             "vhost": "app",
             "type": "topic",
+            "durable": true,
+            "auto_delete": false,
+            "internal": false,
+            "arguments": {}
+        },
+        {
+            "name": "deadLetter",
+            "vhost": "app",
+            "type": "fanout",
             "durable": true,
             "auto_delete": false,
             "internal": false,
@@ -97,7 +119,7 @@
             "destination_type": "queue",
             "routing_key": "request.forecast",
             "arguments": {}
-        },    
+        },
         {
             "source": "predictFuture",
             "vhost": "app",
@@ -112,6 +134,14 @@
             "destination": "forecastsQueue",
             "destination_type": "queue",
             "routing_key": "response.forecast",
+            "arguments": {}
+        },
+        {
+            "source": "deadLetter",
+            "vhost": "app",
+            "destination": "deadLetterQueue",
+            "destination_type": "queue",
+            "routing_key": "",
             "arguments": {}
         }
     ]

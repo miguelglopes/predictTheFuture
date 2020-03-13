@@ -4,7 +4,7 @@ namespace Gateway.Model
 {
     public class RequestBase
     {
-        public string serialize()
+        public string Serialize()
         {
             return JsonConvert.SerializeObject(this);
         }
