@@ -43,7 +43,7 @@ def processedSuccessfully(rk, properties):
     log.debug("{}".format(json.dumps(properties.__dict__)))
 
 def processedUnsuccessfully(rk, properties):
-    log.warn("Unsuccessfully processed {}".format(rk))
+    log.warn("Message processed successfully but operation failed. {}".format(rk))
     log.debug("{}".format(json.dumps(properties.__dict__)))
 
 def receivedMessage(rk, properties):
