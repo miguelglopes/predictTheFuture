@@ -173,7 +173,16 @@ It is important to note that redis does not have any pre-existing model, which m
 
 ### 4. __Python model__
 
-All rabbit related files can be found in the pythonService folder.
+All files related to the python model can be found in the pythonService folder.
+
+__Please note that, after talking to Miguel, I had to modify the original forecast(X, model, num_steps) function so that it didn't need to have an X as input. The function is now:__
+
+```
+def forecast(X, model, num_steps):
+    forecast = model.forecast(num_steps)[0]
+    # forecast = inverse_difference(X, forecast) Commented line!
+    return forecast
+```
 
 Regarding the python service, I decided to split the fit and forecast actions in 2 different microservices. This allows us to:
 1. Launch a number of fit and forecast services independently of each other, according to the load and the time each one takes; 
