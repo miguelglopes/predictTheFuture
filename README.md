@@ -212,6 +212,7 @@ However, we have to be very careful about the locking implementation. The main p
 2. Unlike most distributed scenarios, we actually want the services to acquire the lock even if it's already locked. However, we don't want a previous service to unlock the lock if a more recent lock was performed. 
 
 I ended up having to actually implement the lock in the following way:
+
 ![](images/image3.png)
 
 Essentially, the service locks the model with a future timestamp. If the lock existed, it adds to the timestamp. If the timestamp expired, the lock is not active anymore.
