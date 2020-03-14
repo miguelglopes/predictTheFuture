@@ -9,7 +9,7 @@ the service we are building);
 
 ## Run service
 
-With docker and docker compose installed, run 'docker-compose --compatibility up -d'.
+With docker and docker compose installed, run `docker-compose --compatibility up -d`.
 
 I've tested it in:
 - Windows 10, Docker version 19.03.8, docker-compose version 1.25.4
