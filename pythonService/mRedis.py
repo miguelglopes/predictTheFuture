@@ -4,7 +4,7 @@ import exceptions #local
 import redis
 import time
 import os
-import LogMessages
+import logMessages
 
 _lockModel='lockLatestModel'
 _model='latestModel'
@@ -17,7 +17,7 @@ class MRedis(redis.Redis):
 
     def __init__(self):
         super().__init__(host=_host, port=_port, db=0)
-        LogMessages.info("Successfully connected to Redis.")
+        logMessages.info("Successfully connected to Redis.")
 
     def getLatestModel(self):
         model = self.get(_model)
@@ -32,7 +32,7 @@ class MRedis(redis.Redis):
             raise exceptions.UnableToSaveModel()
 
     def lockLatestModel(self, timeout=_timeout):
-        endLock = float(time.time() + timeout)
+        endLock = float(time.time() + int(timeout))
         self.set(_lockModel, endLock)
         return endLock
 

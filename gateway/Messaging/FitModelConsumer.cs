@@ -7,9 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Gateway.Messaging
 {
-    public class FitConsumer : BaseConsumer
+    public class FitModelConsumer : BaseConsumer
     {
-        public FitConsumer(MRabbitMQ connection, MessageRepository messagesRepository, IConfiguration configuration, ILogger<FitConsumer> logger) :
+        public FitModelConsumer(MRabbitMQ connection, MessageRepository messagesRepository, IConfiguration configuration, ILogger<FitModelConsumer> logger) :
             base(connection, messagesRepository, configuration, logger)
         {
         }

@@ -32,9 +32,6 @@ namespace Gateway
         }
 
 
-
-
-
         // This method gets called by the runtime. Add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -60,14 +57,17 @@ namespace Gateway
 
             //add consumers
             //TODO add more consumers if too much load
-            services.AddHostedService<FitConsumer>();
+            services.AddHostedService<FitModelConsumer>();
             services.AddHostedService<ForecastConsumer>();
 
             //Add swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc(_title, new OpenApiInfo { Title = _title, Version = _version });
+                c.SwaggerDoc(_version, new OpenApiInfo { Title = _title, Version = _version });
+
             });
+
+
         }
 
         // This method gets called by the runtime. Configure the HTTP request pipeline.
@@ -79,7 +79,7 @@ namespace Gateway
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/" + _version + "/swagger.json", _title);
-                c.RoutePrefix = string.Empty;
+                //c.RoutePrefix = string.Empty;
             });
 
             //add routes

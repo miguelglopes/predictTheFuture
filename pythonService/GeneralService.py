@@ -9,8 +9,6 @@ class GeneralService(ABC):
 
     def __init__(self, requestQueue, responseRK):
 
-        time.sleep(5)# Delay to make sure rabbit and redis is up. Important when running in docker
-
         self.requestQueue=requestQueue
         self.responseRK=responseRK
         self.rabbit=MRabbit(self.requestQueue)

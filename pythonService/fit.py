@@ -1,8 +1,8 @@
 #TODO DOCUMENTATION
 
-from GeneralService import GeneralService #local
+from generalService import GeneralService #local
 import arimaModel #local
-import LogMessages #local
+import logMessages #local
 import exceptions #local
 import json
 import pickle
@@ -20,7 +20,7 @@ class FitService(GeneralService):
     
     def onMessage(self, channel, basic_deliver, properties, body):
 
-        LogMessages.receivedMessage(basic_deliver.routing_key, properties)
+        logMessages.receivedMessage(basic_deliver.routing_key, properties)
 
         #check for invalid requests. These should not be aknowledge since they are not our responsability. They are not requed.        
         try:

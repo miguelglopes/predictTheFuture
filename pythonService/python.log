@@ -1,3 +1,18 @@
 2020-03-13 - 14:47:16 [15288] [INFO] Successfully connected to RabbitMQ.
 2020-03-13 - 14:47:16 [15288] [INFO] Successfully connected to Redis.
 2020-03-13 - 14:47:16 [15288] [INFO] Consuming messages on queue requestQueueForecast
+2020-03-13 - 19:21:00 [19472] [INFO] Successfully connected to RabbitMQ.
+2020-03-13 - 19:21:00 [19472] [INFO] Successfully connected to Redis.
+2020-03-13 - 19:21:00 [19472] [INFO] Consuming messages on queue requestQueueFit
+2020-03-13 - 19:21:10 [19472] [INFO] Successfully processed request.fit
+2020-03-13 - 19:21:10 [19472] [INFO] Published response request.fit
+2020-03-13 - 19:21:15 [19472] [INFO] Successfully processed request.fit
+2020-03-13 - 19:21:15 [19472] [WARNING] Unsuccessfully processed request.fit
+2020-03-13 - 19:21:52 [19472] [INFO] Successfully processed request.fit
+2020-03-13 - 19:21:52 [19472] [WARNING] Unsuccessfully processed request.fit
+2020-03-13 - 19:22:05 [19472] [INFO] Successfully processed request.fit
+2020-03-13 - 19:22:05 [19472] [WARNING] Unsuccessfully processed request.fit
+2020-03-13 - 19:22:20 [19472] [INFO] Successfully processed request.fit
+2020-03-13 - 19:22:20 [19472] [WARNING] Unsuccessfully processed request.fit
+2020-03-13 - 19:23:24 [19472] [INFO] Successfully processed request.fit
+2020-03-13 - 19:23:24 [19472] [WARNING] Unsuccessfully processed request.fit

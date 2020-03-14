@@ -25,7 +25,7 @@ services:
             - 6379:6379
         env_file:
             - variables.env
-
+ 
     gateway:
         build:
             context: ./gateway
@@ -37,6 +37,7 @@ services:
             - variables.env
         depends_on:
             - rabbit
+        restart: on-failure
     
     fit:
         build:
@@ -51,6 +52,7 @@ services:
             - redis
         deploy:
             replicas: 6
+        restart: on-failure
 
     forecast:
         build:
@@ -65,9 +67,10 @@ services:
             - redis
         deploy:
             replicas: 3
+        restart: on-failure
 
 networks:
     backend:
         driver: bridge
     frontend:
-        driver: bridge
+        driver: bridge            
