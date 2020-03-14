@@ -59,6 +59,7 @@ class MRedis(redis.Redis):
                 #lock ended, not locked
                 return False
             else:
+                logMessages.debug("Model locked.")
                 return True
         else:
             return False
