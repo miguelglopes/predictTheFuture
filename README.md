@@ -17,7 +17,7 @@ I've tested it in:
 
 , although I suspect any OS that runs docker probably works.
 
-All the services wil lrestart until rabbit comes online, therefore it may take some time
+All the services will restart until rabbit and redis come online, therefore it may take some time for everything to be up and running.
 
 ## Requirements (original plus added)
 
