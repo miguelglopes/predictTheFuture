@@ -63,7 +63,7 @@ namespace Gateway.Controllers
 
             if (m.IsSuccess())
             {
-                logger.LogWarning("Successfully processed {}", m.MessageID);
+                logger.LogInformation("Successfully processed {}", m.MessageID);
                 return StatusCode(StatusCodes.Status200OK, m);
             }
             else if (m.IsFail())
