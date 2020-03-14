@@ -17,6 +17,8 @@ I've tested it in:
 
 , although I suspect any OS that runs docker probably works.
 
+All the services wil lrestart until rabbit comes online, therefore it may take some time
+
 ## Requirements (original plus added)
 
 - A single instance of the .NET broker should be enough for handling all of the incoming requests;
@@ -49,6 +51,8 @@ In order to have a unified protocol for the content, all the request and respons
 ### 1. __Rabbit__
 
 All rabbit related files can be found in the rabbit folder.
+
+The rabbitMQ management interface can be found at http://localhost:15672.
 
 RabbitMQ service is the central piece in the architecture. As is usually the case, we need to have an exchange, producers, queues, bindings and consumers.
 
@@ -159,7 +163,7 @@ I added swagger to simplify the api documentation and ease of use. Please check 
 
 The swagger.json configuration can be found at: http://localhost:5000/swagger/v1/swagger.json
 
-### 3 Redis
+### 3. __Redis__
 
 All redis related files can be found in the redis folder.
 
@@ -167,7 +171,7 @@ In order to persist the latest fitted_model, to be used by all forecasting agent
 
 It is important to note that redis does not have any pre-existing model, which means no forecast can be made prior to fitting a model. 
 
-### 4 Python model
+### 4. __Python model__
 
 All rabbit related files can be found in the pythonService folder.
 
@@ -225,7 +229,7 @@ The main problems with this approach are:
 - It may happen that a service will fit the model and the model will never be used, either because another fit request appeared or because the lock alread expired. The only problem with this is that we are wasting recources;
 - If we are continuously flooded with fit_model requests, the forecasting requests will never be processed.
 
-### 5. Docker encapsulation
+### 5. __Docker__
 
 I decided to use docker to encapsulate the services and docker-compose to orchestrate them. Each of the 4 services have its own Dockerfile, which is built using a docker-compose file.
 
@@ -236,7 +240,7 @@ All services need to have a variables.env file to run.
 Since we want multiple python services, the docker-compose file deploys 6 fit services and 3 forecast services.
 
 
-### 6. Improvements
+### 6. __Improvements__
 
 Although I'm fairly happy with the solution proposed and with the robustness of the code, many improvements could be made. I've talked about most of them along this document.
 
