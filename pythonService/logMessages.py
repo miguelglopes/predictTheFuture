@@ -47,7 +47,7 @@ def processedUnsuccessfully(rk, properties):
     log.debug("{}".format(json.dumps(properties.__dict__)))
 
 def receivedMessage(rk, properties):
-    log.debug("Processing message {}".format(rk))
+    log.info("Processing message {}".format(rk))
     log.debug("{}".format(json.dumps(properties.__dict__)))
 
 def publishResponse(rk, properties):

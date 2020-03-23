@@ -37,7 +37,7 @@ class MRedis(redis.Redis):
         return endLock
 
     def unlockLatestModel(self, previousEndLock):
-        if self.exists(_lockModel):
+        if self.isLatestModelLocked():
             newEndLock=float(self.get(_lockModel)) #IF THIS GIVES ERROR SOMETHING VERY STRANGE HAPPENED
             if newEndLock==previousEndLock:
                 #it was my lock, delete it
